@@ -1,0 +1,16 @@
+import 'package:dio/dio.dart';
+import '../../../../const/api/api_const.dart';
+import '../../../../const/dio/locator.dart';
+import '../model/blog_list_model.dart';
+
+class BlogServices {
+  final Dio _dio = getIt.get();
+
+  Future<BlogListModel> getBlogList({int page = 1, int limit = 30}) async {
+    final response = await _dio.get(
+      "content",
+      queryParameters: {"type": ApiConst.blog, "page": page, "limit": limit},
+    );
+    return BlogListModel.fromJson(response.data);
+  }
+}
