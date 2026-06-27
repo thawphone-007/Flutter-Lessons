@@ -88,7 +88,7 @@ class _HomeState extends State<Home> {
     _groupValue = student.gender;
     _openForJob = student.openForJob;
 
-    print(student);
+    // print(student);
   }
 
   @override
@@ -217,9 +217,6 @@ class _HomeState extends State<Home> {
                     },
                   ),
                   CheckboxListTile(
-                    // checkColor: Colors.red,
-                    // controlAffinity: ListTileControlAffinity.platform,
-                    // activeColor: Colors.indigo,
                     title: const Text('Football'),
                     value: _football,
                     onChanged: (bool? isCheck) {
@@ -251,7 +248,7 @@ class _HomeState extends State<Home> {
                               fillColor: WidgetStateProperty.resolveWith((
                                 states,
                               ) {
-                                if (states.contains(MaterialState.selected)) {
+                                if (states.contains(WidgetState.selected)) {
                                   return Colors.indigo;
                                 }
                                 return Colors.yellow;
@@ -268,7 +265,7 @@ class _HomeState extends State<Home> {
                               fillColor: WidgetStateProperty.resolveWith((
                                 states,
                               ) {
-                                if (states.contains(MaterialState.selected)) {
+                                if (states.contains(WidgetState.selected)) {
                                   return Colors.indigo;
                                 }
                                 return Colors.yellow;
@@ -284,7 +281,6 @@ class _HomeState extends State<Home> {
                     activeThumbColor: Colors.green,
                     inactiveThumbColor: Colors.red,
                     inactiveTrackColor: Colors.brown,
-                    activeThumbImage: AssetImage('images/clock.png'),
                     title: Text('Open for Job'),
                     value: _openForJob,
                     onChanged: (isOpen) {
@@ -322,7 +318,10 @@ class _HomeState extends State<Home> {
                             password: _password ?? "",
                             address: _address ?? "",
                             stateRegion: _stateRegion ?? "",
-                            hobbies: hobbies().split(","),
+                            hobbies: [
+                              _football != false ? "Football" : "",
+                              _reading != false ? "Reading" : "",
+                            ],
                             gender: _groupValue,
                             openForJob: _openForJob,
                           );
