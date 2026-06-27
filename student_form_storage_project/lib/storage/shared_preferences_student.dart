@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'student.dart';
 
 class SharedPreferencesStudent {
   final String _name = "name";
@@ -10,25 +11,31 @@ class SharedPreferencesStudent {
   final String _gender = "gender";
   final String _openForJob = "openForJob";
 
-  void safeStudent({
-    required String name,
-    required String phone,
-    required String password,
-    required String address,
-    required String stateRegion,
-    required List<String> hobbies,
-    required String gender,
-    required bool openForJob,
-  }) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  final SharedPreferences sharedPreferences;
 
-    sharedPreferences.setString(_name, name);
-    sharedPreferences.setString(_phone, phone);
-    sharedPreferences.setString(_password, password);
-    sharedPreferences.setString(_address, address);
-    sharedPreferences.setString(_stateRegion, stateRegion);
-    sharedPreferences.setStringList(_hobbies, hobbies);
-    sharedPreferences.setString(_gender, gender);
-    sharedPreferences.setBool(_openForJob, openForJob);
+  SharedPreferencesStudent({required this.sharedPreferences});
+
+  void saveStudent({required Student student}) {
+    sharedPreferences.setString(_name, student.name);
+    sharedPreferences.setString(_phone, student.phone);
+    sharedPreferences.setString(_password, student.password);
+    sharedPreferences.setString(_address, student.address);
+    sharedPreferences.setString(_stateRegion, student.stateRegion);
+    sharedPreferences.setStringList(_hobbies, student.hobbies);
+    sharedPreferences.setString(_gender, student.gender);
+    sharedPreferences.setBool(_openForJob, student.openForJob);
+  }
+
+  Student getStudent() {
+    return Student(
+      name: sharedPreferences.getString(_name) ?? "",
+      phone: sharedPreferences.getString(_phone) ?? "",
+      password: sharedPreferences.getString(_password) ?? "",
+      address: sharedPreferences.getString(_address) ?? "",
+      stateRegion: sharedPreferences.getString(_stateRegion) ?? "",
+      hobbies: sharedPreferences.getStringList(_hobbies) ?? [],
+      gender: sharedPreferences.getString(_gender) ?? "",
+      openForJob: sharedPreferences.getBool(_openForJob) ?? false,
+    );
   }
 }

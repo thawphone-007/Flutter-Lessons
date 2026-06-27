@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:student_form_storage_project/storage/shared_preferences_student.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'storage/shared_preferences_student.dart';
+import 'storage/student.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -23,13 +27,15 @@ void main() {
           errorStyle: TextStyle(color: Colors.brown),
         ),
       ),
-      home: Home(),
+      home: Home(sharedPreferences: sharedPreferences),
     ),
   );
 }
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  const Home({super.key, required this.sharedPreferences});
+
+  final SharedPreferences sharedPreferences;
 
   @override
   State<Home> createState() => _HomeState();
@@ -37,7 +43,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   String? _name, _phone, _password, _address;
-  final List<String> _hobbies = [];
   bool _reading = false;
   bool _football = false;
   String _groupValue = '';
@@ -65,15 +70,27 @@ class _HomeState extends State<Home> {
     'Yangon',
   ];
 
-  final SharedPreferencesStudent _sharedPreferencesStudent =
-      SharedPreferencesStudent();
+  late final SharedPreferencesStudent _student = SharedPreferencesStudent(
+    sharedPreferences: widget.sharedPreferences,
+  );
 
   @override
   void initState() {
     super.initState();
+    Student student = _student.getStudent();
+    _name = student.name;
+    _phone = student.phone;
+    _password = student.password;
+    _address = student.address;
+    _stateRegion = student.stateRegion;
+    _reading = student.hobbies.contains("Reading");
+    _football = student.hobbies.contains("Football");
+    _groupValue = student.gender;
+    _openForJob = student.openForJob;
+
+    print(student);
   }
 
-  //positioned
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,10 +105,12 @@ class _HomeState extends State<Home> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextFormField(
+                    initialValue: _name,
                     validator: (str) {
                       if (str == null || str.trim().isEmpty) {
                         return 'Please Enter Your Name';
                       }
+                      return null;
                     },
                     onSaved: (str) {
                       _name = str;
@@ -103,10 +122,12 @@ class _HomeState extends State<Home> {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
+                    initialValue: _phone,
                     validator: (str) {
                       if (str == null || str.trim().length < 5) {
                         return 'Please Enter at least 5 number ';
                       }
+                      return null;
                     },
                     onSaved: (str) {
                       _phone = str;
@@ -118,10 +139,12 @@ class _HomeState extends State<Home> {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
+                    initialValue: _password,
                     validator: (str) {
                       if (str == null || str.trim().length < 8) {
                         return 'Please Enter at least 8 password';
                       }
+                      return null;
                     },
                     onSaved: (str) {
                       _password = str;
@@ -135,10 +158,12 @@ class _HomeState extends State<Home> {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
+                    initialValue: _address,
                     validator: (str) {
                       if (str == null || str.trim().isEmpty) {
                         return 'Please Enter address';
                       }
+                      return null;
                     },
                     onSaved: (str) {
                       _address = str;
@@ -152,7 +177,7 @@ class _HomeState extends State<Home> {
                   ),
                   const SizedBox(height: 10),
                   DropdownButtonFormField<String>(
-                    value: _stateRegion,
+                    initialValue: _stateRegion,
                     decoration: const InputDecoration(
                       labelText: 'Select your state/region',
                       prefixIcon: Icon(Icons.location_city),
@@ -192,9 +217,9 @@ class _HomeState extends State<Home> {
                     },
                   ),
                   CheckboxListTile(
-                    checkColor: Colors.red,
-                    controlAffinity: ListTileControlAffinity.platform,
-                    activeColor: Colors.indigo,
+                    // checkColor: Colors.red,
+                    // controlAffinity: ListTileControlAffinity.platform,
+                    // activeColor: Colors.indigo,
                     title: const Text('Football'),
                     value: _football,
                     onChanged: (bool? isCheck) {
@@ -291,8 +316,7 @@ class _HomeState extends State<Home> {
                                 "Gender : $_groupValue\n"
                                 "${_openForJob ? "Open for Job" : ""}";
                           });
-
-                          _sharedPreferencesStudent.safeStudent(
+                          Student student = Student(
                             name: _name ?? "",
                             phone: _phone ?? "",
                             password: _password ?? "",
@@ -302,6 +326,7 @@ class _HomeState extends State<Home> {
                             gender: _groupValue,
                             openForJob: _openForJob,
                           );
+                          _student.saveStudent(student: student);
                         }
                       }
                     },
