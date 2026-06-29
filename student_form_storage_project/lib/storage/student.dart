@@ -8,6 +8,7 @@ class Student {
   final String gender;
   final bool openForJob;
 
+
   Student({
     required this.name,
     required this.phone,
@@ -17,6 +18,7 @@ class Student {
     required this.hobbies,
     required this.gender,
     required this.openForJob,
+
   });
 
   @override
@@ -24,3 +26,7 @@ class Student {
     return 'Student{name: $name, phone: $phone, password: $password, address: $address, stateRegion: $stateRegion, hobbies: $hobbies, gender: $gender, openForJob: $openForJob}';
   }
 }
+
+
+
+

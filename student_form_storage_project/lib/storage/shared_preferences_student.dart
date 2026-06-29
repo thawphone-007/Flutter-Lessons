@@ -1,5 +1,5 @@
-import 'package:shared_preferences/shared_preferences.dart';
 import 'student.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesStudent {
   final String _name = "name";
@@ -13,7 +13,10 @@ class SharedPreferencesStudent {
 
   final SharedPreferences sharedPreferences;
 
-  SharedPreferencesStudent({required this.sharedPreferences});
+  SharedPreferencesStudent({
+
+    required this.sharedPreferences,
+  });
 
   void saveStudent({required Student student}) {
     sharedPreferences.setString(_name, student.name);
@@ -35,7 +38,11 @@ class SharedPreferencesStudent {
       stateRegion: sharedPreferences.getString(_stateRegion) ?? "",
       hobbies: sharedPreferences.getStringList(_hobbies) ?? [],
       gender: sharedPreferences.getString(_gender) ?? "",
-      openForJob: sharedPreferences.getBool(_openForJob) ?? false,
+      openForJob: sharedPreferences.getBool(_openForJob) == true,
     );
+  }
+
+  void clear() {
+    sharedPreferences.clear();
   }
 }

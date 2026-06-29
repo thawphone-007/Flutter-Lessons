@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'storage/shared_preferences_student.dart';
 import 'storage/student.dart';
+import 'storage/common_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -82,7 +82,9 @@ class _HomeState extends State<Home> {
     _phone = student.phone;
     _password = student.password;
     _address = student.address;
-    _stateRegion = student.stateRegion;
+    if (student.stateRegion.isNotEmpty) {
+      _stateRegion = student.stateRegion;
+    }
     _reading = student.hobbies.contains("Reading");
     _football = student.hobbies.contains("Football");
     _groupValue = student.gender;
@@ -94,9 +96,21 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Stack Lesson')),
+      appBar: AppBar(
+        title: const Text('Student Form Storage Project'),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              _student.clear();
+            },
+            icon: Icon(Icons.delete),
+          ),
+        ],
+      ),
       body: Center(
-        child: Padding(
+        child: Container(
+          constraints: BoxConstraints(maxWidth: 600),
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
           child: SingleChildScrollView(
             child: Form(
