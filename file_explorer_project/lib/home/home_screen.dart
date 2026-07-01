@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-
 import '../file services/file_services.dart';
+import 'create_new_file_dialog_widget.dart';
+import 'create_new_folder_dialog_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,6 +13,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final FileServices _fileServices = FileServices();
+  List<Directory> _currentFolderList = [];
+  List<File> _currentFileList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFileAndFolder("");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,20 +31,78 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             tooltip: "Create New Folder",
-            onPressed: () async {
-              await _fileServices.createFolder("tpm folder");
+            onPressed: () {
+              // async မလိုအပ်
+              _createNewFolder("");
             },
-            icon: Icon(Icons.create_new_folder_outlined),
+            icon: Icon(Icons.create_new_folder_sharp),
           ),
           IconButton(
             tooltip: "Create New File",
-            onPressed: () async {
-              await _fileServices.writeFile("tpm file", "");
+            onPressed: () {
+              // async မလိုအပ်
+              _createNewFile("");
             },
-            icon: Icon(Icons.upload_file_outlined),
+            icon: Icon(Icons.note_add_sharp),
+          ),
+        ],
+      ),
+      body: CustomScrollView(
+        slivers: [
+          SliverList.builder(
+            itemCount: _currentFolderList.length,
+            itemBuilder: (context, index) {
+              Directory directory = _currentFolderList[index];
+              return ListTile(
+                leading: Icon(Icons.folder),
+                title: Text(directory.path.split("/").last),
+                subtitle: Text(directory.statSync().changed.toString()),
+              );
+            },
+          ),
+          SliverList.builder(
+            itemCount: _currentFileList.length,
+            itemBuilder: (context, index) {
+              File file = _currentFileList[index];
+              return ListTile(
+                leading: Icon(Icons.insert_drive_file_outlined),
+                title: Text(file.path.split("/").last),
+                subtitle: Text(file.statSync().changed.toString()),
+              );
+            },
           ),
         ],
       ),
     );
+  }
+
+  void _loadFileAndFolder(String path) async {
+    _currentFolderList = await _fileServices.getFolderList(path);
+    _currentFileList = await _fileServices.getFileList(path);
+    setState(() {});
+  }
+
+  void _createNewFolder(String path) async {
+    bool isOK = await showDialog(
+      context: context,
+      builder: (context) {
+        return CreateNewFolderDialogWidget();
+      },
+    );
+    if (isOK) {
+      _loadFileAndFolder("");
+    }
+  }
+
+  void _createNewFile(String path) async {
+    bool isOK = await showDialog(
+      context: context,
+      builder: (context) {
+        return CreateNewFileDialogWidget();
+      },
+    );
+    if (isOK) {
+      _loadFileAndFolder("");
+    }
   }
 }
