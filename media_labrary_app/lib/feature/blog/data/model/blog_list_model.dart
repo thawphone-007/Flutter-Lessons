@@ -1,10 +1,11 @@
 class BlogListModel {
   BlogListModel({
-      this.total, 
-      this.page, 
-      this.limit, 
-      this.totalPages, 
-      this.data,});
+    this.total,
+    this.page,
+    this.limit,
+    this.totalPages,
+    this.data,
+  });
 
   BlogListModel.fromJson(dynamic json) {
     total = json['total'];
@@ -14,26 +15,31 @@ class BlogListModel {
     if (json['data'] != null) {
       data = [];
       json['data'].forEach((v) {
-        data?.add(Data.fromJson(v));
+        data?.add(BlogData.fromJson(v));
       });
     }
   }
+
   num? total;
   num? page;
   num? limit;
   num? totalPages;
-  List<Data>? data;
-BlogListModel copyWith({  num? total,
-  num? page,
-  num? limit,
-  num? totalPages,
-  List<Data>? data,
-}) => BlogListModel(  total: total ?? this.total,
-  page: page ?? this.page,
-  limit: limit ?? this.limit,
-  totalPages: totalPages ?? this.totalPages,
-  data: data ?? this.data,
-);
+  List<BlogData>? data;
+
+  BlogListModel copyWith({
+    num? total,
+    num? page,
+    num? limit,
+    num? totalPages,
+    List<BlogData>? data,
+  }) => BlogListModel(
+    total: total ?? this.total,
+    page: page ?? this.page,
+    limit: limit ?? this.limit,
+    totalPages: totalPages ?? this.totalPages,
+    data: data ?? this.data,
+  );
+
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['total'] = total;
@@ -45,22 +51,22 @@ BlogListModel copyWith({  num? total,
     }
     return map;
   }
-
 }
 
-class Data {
-  Data({
-      this.id, 
-      this.type, 
-      this.title, 
-      this.excerpt, 
-      this.author, 
-      this.createdAt, 
-      this.comments, 
-      this.coverImage, 
-      this.content,});
+class BlogData {
+  BlogData({
+    this.id,
+    this.type,
+    this.title,
+    this.excerpt,
+    this.author,
+    this.createdAt,
+    this.comments,
+    this.coverImage,
+    this.content,
+  });
 
-  Data.fromJson(dynamic json) {
+  BlogData.fromJson(dynamic json) {
     id = json['id'];
     type = json['type'];
     title = json['title'];
@@ -76,6 +82,7 @@ class Data {
     coverImage = json['coverImage'];
     content = json['content'];
   }
+
   num? id;
   String? type;
   String? title;
@@ -85,25 +92,29 @@ class Data {
   List<Comments>? comments;
   String? coverImage;
   String? content;
-Data copyWith({  num? id,
-  String? type,
-  String? title,
-  String? excerpt,
-  String? author,
-  String? createdAt,
-  List<Comments>? comments,
-  String? coverImage,
-  String? content,
-}) => Data(  id: id ?? this.id,
-  type: type ?? this.type,
-  title: title ?? this.title,
-  excerpt: excerpt ?? this.excerpt,
-  author: author ?? this.author,
-  createdAt: createdAt ?? this.createdAt,
-  comments: comments ?? this.comments,
-  coverImage: coverImage ?? this.coverImage,
-  content: content ?? this.content,
-);
+
+  BlogData copyWith({
+    num? id,
+    String? type,
+    String? title,
+    String? excerpt,
+    String? author,
+    String? createdAt,
+    List<Comments>? comments,
+    String? coverImage,
+    String? content,
+  }) => BlogData(
+    id: id ?? this.id,
+    type: type ?? this.type,
+    title: title ?? this.title,
+    excerpt: excerpt ?? this.excerpt,
+    author: author ?? this.author,
+    createdAt: createdAt ?? this.createdAt,
+    comments: comments ?? this.comments,
+    coverImage: coverImage ?? this.coverImage,
+    content: content ?? this.content,
+  );
+
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
@@ -119,17 +130,17 @@ Data copyWith({  num? id,
     map['content'] = content;
     return map;
   }
-
 }
 
 class Comments {
   Comments({
-      this.id, 
-      this.user, 
-      this.userId, 
-      this.text, 
-      this.createdAt, 
-      this.isOwn,});
+    this.id,
+    this.user,
+    this.userId,
+    this.text,
+    this.createdAt,
+    this.isOwn,
+  });
 
   Comments.fromJson(dynamic json) {
     id = json['id'];
@@ -139,25 +150,30 @@ class Comments {
     createdAt = json['createdAt'];
     isOwn = json['isOwn'];
   }
+
   num? id;
   String? user;
   num? userId;
   String? text;
   String? createdAt;
   bool? isOwn;
-Comments copyWith({  num? id,
-  String? user,
-  num? userId,
-  String? text,
-  String? createdAt,
-  bool? isOwn,
-}) => Comments(  id: id ?? this.id,
-  user: user ?? this.user,
-  userId: userId ?? this.userId,
-  text: text ?? this.text,
-  createdAt: createdAt ?? this.createdAt,
-  isOwn: isOwn ?? this.isOwn,
-);
+
+  Comments copyWith({
+    num? id,
+    String? user,
+    num? userId,
+    String? text,
+    String? createdAt,
+    bool? isOwn,
+  }) => Comments(
+    id: id ?? this.id,
+    user: user ?? this.user,
+    userId: userId ?? this.userId,
+    text: text ?? this.text,
+    createdAt: createdAt ?? this.createdAt,
+    isOwn: isOwn ?? this.isOwn,
+  );
+
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
@@ -168,5 +184,4 @@ Comments copyWith({  num? id,
     map['isOwn'] = isOwn;
     return map;
   }
-
 }

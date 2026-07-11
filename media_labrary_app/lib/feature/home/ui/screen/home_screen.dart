@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:media_labrary_app/feature/blog/ui/blog_screen.dart';
 
 import '../widget/my_nav_bar.dart';
 
@@ -9,12 +10,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Media Library App"), centerTitle: true),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [Center(child: Text("Home Screen"))],
-      ),
+      body: BlogScreen(),
       bottomNavigationBar: MyNavBar(),
     );
   }
 }
-

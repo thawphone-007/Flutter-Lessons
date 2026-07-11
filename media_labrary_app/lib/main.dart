@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'const/dio/locator.dart';
-import 'features/home/ui/screens/home_screen.dart';
+import 'package:media_labrary_app/const/dio/locator.dart';
+import 'feature/home/ui/screen/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

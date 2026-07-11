@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import '../file services/file_services.dart';
 
 class CreateNewFileDialogWidget extends StatefulWidget {
-  const CreateNewFileDialogWidget({super.key});
+  const CreateNewFileDialogWidget({super.key, required this.currentLocation});
+  final String currentLocation;
 
   @override
   State<CreateNewFileDialogWidget> createState() =>
@@ -47,7 +48,7 @@ class _CreateNewFileDialogWidgetState extends State<CreateNewFileDialogWidget> {
               ? null
               : () async {
                   await _fileServices.writeFile(
-                    newFile.text,
+                    "${widget.currentLocation}${newFile.text}",
                     "",
                     status: (String status) {
                       ScaffoldMessenger.of(
