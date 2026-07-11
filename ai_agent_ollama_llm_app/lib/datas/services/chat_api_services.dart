@@ -26,7 +26,9 @@ class ChatApiServices {
         headers: {"Content-Type": "application/json"},
         responseType: ResponseType.stream,
       ),
-      data: requestModel,
+      data: requestModel.copyWith(
+        tools: ApiConst.systemTools
+      ).toJson(),
     );
 
     final lines = response.data!.stream
