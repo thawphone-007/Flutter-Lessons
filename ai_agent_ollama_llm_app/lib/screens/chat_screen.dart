@@ -1,3 +1,5 @@
+import 'package:ai_agent_ollama_llm_app/datas/crypto_services/crypto_services.dart';
+import 'package:ai_agent_ollama_llm_app/datas/models/crypto_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 import '../const/api_const.dart';
@@ -48,12 +50,11 @@ class _ChatScreenState extends State<ChatScreen> {
                     }
                     Message message = _message[index];
                     bool isSender = message.role == "user";
-                    if(message.content?.isEmpty == true){
+                    if (message.content?.isEmpty == true) {
                       return SizedBox.shrink();
                     }
 
                     return BubbleSpecialThree(
-
                       text: message.content ?? "",
                       isSender: isSender,
                       color: isSender ? Colors.lightBlue : Colors.black12,
@@ -89,10 +90,14 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  void send(String prompt) {
+  void send(String prompt, {bool isTool = false}) {
     setState(() {
       _isLoading = true;
-      _message.add(Message(role: "user", content: prompt));
+      if (isTool) {
+        _message.add(Message(role: "tool", content: prompt));
+      } else {
+        _message.add(Message(role: "user", content: prompt));
+      }
     });
 
     _textController.clear();
@@ -133,12 +138,24 @@ class _ChatScreenState extends State<ChatScreen> {
               String? name = tool.function?.name;
 
               if (name == "show_warning_dialog") {
-                Arguments? arguments = tool.function?.arguments;
-                String? title = arguments?.title;
-                String? content = arguments?.content;
+                Map? arguments = tool.function?.arguments;
+                String? title = arguments?["title"];
+                String? content = arguments?["content"];
 
                 if (title != null && content != null) {
                   showWarningDialog(title, content);
+                }
+              } else if (name == "get_binance_price") {
+                Map? arguments = tool.function?.arguments;
+                String? symbol = arguments?["symbol"];
+
+                if (symbol != null) {
+                  getCrypto(symbol).then((v) {
+                    send(
+                      "This is the result form get_binance_price tool : ${v.toJson()}",
+                      isTool: true,
+                    );
+                  });
                 }
               }
             }
@@ -174,5 +191,14 @@ class _ChatScreenState extends State<ChatScreen> {
         );
       },
     );
+  }
+
+  Future<CryptoResponseModel> getCrypto(String symbol) {
+    try {
+      CryptoServices cryptoServices = CryptoServices();
+      return cryptoServices.getCryptoPrice(symbol);
+    } catch (e) {
+      throw Exception("Failed to get crypto price : $e");
+    }
   }
 }
