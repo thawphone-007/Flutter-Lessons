@@ -1,9 +1,9 @@
-import 'package:ai_agent_ollama_llm_app/datas/crypto_services/crypto_services.dart';
-import 'package:ai_agent_ollama_llm_app/datas/models/crypto_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 import '../const/api_const.dart';
 import '../const/chat_message_mapper.dart';
+import '../datas/crypto_services/crypto_services.dart';
+import '../datas/models/crypto_response_model.dart';
 import '../datas/models/request_model.dart';
 import '../datas/models/response_model.dart';
 import '../datas/services/chat_api_services.dart';
@@ -50,7 +50,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     }
                     Message message = _message[index];
                     bool isSender = message.role == "user";
-                    if (message.content?.isEmpty == true) {
+                    if (message.content?.isEmpty == true || message.role == "tool") {
                       return SizedBox.shrink();
                     }
 
@@ -109,14 +109,14 @@ class _ChatScreenState extends State<ChatScreen> {
           requestModel: RequestModel(
             model: ApiConst.madelName,
             messages: [
+              ..._message.map((v) {
+                return toMessage(v);
+              }),
               Messages(
                 role: ApiConst.systemMessage["role"],
                 content: ApiConst.systemMessage["content"],
               ),
               Messages(role: "user", content: prompt),
-              ..._message.map((v) {
-                return toMessage(v);
-              }),
             ],
             stream: true,
             think: false,
